@@ -2,12 +2,22 @@
 #include<unordered_map>
 #include<string>
 #include<vector>
-
 #include<algorithm>
 
 
 using namespace std;
 
+
+//Struct for the graph
+struct node {
+	string charm = NULL;
+	int weight = 0;
+
+	void initialize(string charm, int weight) {
+		this->charm = charm;
+		this->weight = weight;
+	}
+};
 
 //Realm => R
 int getMinChanges (string R1, string R2);
@@ -99,3 +109,4 @@ int getMinChanges (string R1, string R2) {
 	return ar[R1.size ()][R2.size ()];
 
 }
+
