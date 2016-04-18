@@ -1,23 +1,3 @@
-#include<iostream>
-#include<map>
-#include<string>
-#include<vector>
-#include <algorithm>
-using namespace std;
-
-//Realm => R
-int getMinChanges (string R1, string R2);
-int getMaxIncantation (string R);
-
-int main () {
-
-	cout << getMinChanges("good","gold")<<endl;
-
-
-	system ("pause");
-	return 0;
-}
-
 
 int getMinChanges (string R1, string R2) {
 	vector<vector<int>> ar;
