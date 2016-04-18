@@ -21,7 +21,7 @@ struct node {
 
 //Realm => R
 int getMinChanges (string R1, string R2);
-int getMaxIncantation (string R);
+int getMaxIncantation (vector<int> magicianPowers);
 
 
 int main () {
@@ -54,7 +54,6 @@ int main () {
 	}
 
 
-
 	//Check input was collected correctly
 	for (it = Realms.begin(); it != Realms.end(); it++) {
 		cout << "Charm: " << it->first << endl;
@@ -65,12 +64,11 @@ int main () {
 		cout << endl << endl;
 	}
 
-
 	system("pause");
 	return 0;
 }
 
-
+//gets the total changes that it needs to perform to get to a certain realm
 int getMinChanges (string R1, string R2) {
 	vector<vector<int>> ar;
 	int rows = R1.size () + 1;
@@ -98,15 +96,23 @@ int getMinChanges (string R1, string R2) {
 					}
 				}
 			}
-
-
 		}
-
-	
 	}
-
-
 	return ar[R1.size ()][R2.size ()];
 
+}
+
+
+//gets the total amount of incantation per Realm that can be performed
+int getMaxIncantation (vector<int> magicianPowers) {
+	int count = 0; int previous = -1;
+	for (int i = 0; i < (int)magicianPowers.size(); i++) {
+		if (magicianPowers[i]>previous) {
+			previous = magicianPowers[i];
+			count++;
+		}
+	}
+
+	return count;
 }
 
