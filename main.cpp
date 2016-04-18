@@ -2,12 +2,10 @@
 #include<unordered_map>
 #include<string>
 #include<vector>
-<<<<<<< HEAD
-#include <algorithm>
-=======
+
 #include<algorithm>
 
->>>>>>> acd86141074b2f80533c57dc7f0ea50b65eb2718
+
 using namespace std;
 
 //Realm => R
@@ -16,12 +14,6 @@ int getMaxIncantation (string R);
 
 int main () {
 
-	cout << getMinChanges("good","gold")<<endl;
-
-<<<<<<< HEAD
-
-	system ("pause");
-=======
 	//N -> number of realms    M -> number of magi   P -> power of magi
 	int N, M, P;	string charm;
 	vector<int> listOfMagi;
@@ -61,7 +53,6 @@ int main () {
 
 
 	system("pause");
->>>>>>> acd86141074b2f80533c57dc7f0ea50b65eb2718
 	return 0;
 }
 
