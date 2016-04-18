@@ -6,9 +6,9 @@
 
 using namespace std;
 
-//Realm => R
-int getMaxChanges(string R1, string R2);
-int getMaxIncantation(string R);
+//Charm for a centain Realm => C
+int getMaxChanges(string C1, string C2);
+int getMaxIncantation(string C);
 
 int main() {
 
@@ -38,6 +38,8 @@ int main() {
 		Realms.insert(make_pair(charm, listOfMagi));
 		listOfMagi.clear();
 	}
+
+
 
 	//Check input was collected correctly
 	for (it = Realms.begin(); it != Realms.end(); it++) {
