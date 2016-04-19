@@ -42,7 +42,7 @@ struct node {
 
 //Realm => R
 int getMinChanges (string R1, string R2);
-int getMaxIncantation (vector<int> magicianPowers);
+vector<int> getMaxIncantation (vector<int> magicianPowers);
 unordered_map<string, node> generateGraph(unordered_map<string, vector<int>> input);
 int shortestPath (unordered_map<string, node>graph, string start, string finish);
 
@@ -138,17 +138,24 @@ int getMinChanges (string R1, string R2) {
 }
 
 
-//Gets the total amount of incantation per Realm that can be performed
-int getMaxIncantation (vector<int> magicianPowers) {
-	int count = 0; int previous = -1;
-	for (int i = 0; i < (int)magicianPowers.size(); i++) {
-		if (magicianPowers[i]>previous) {
+//Gets the list with the maximum number of incantation per Realm that can be performed
+//Each element in the result vector shows the power's cost up to position i
+vector<int> getMaxIncantation (vector<int> magicianPowers)
+{
+	vector<int> result;
+	int count = 0, previous = -1;
+
+	for (int i = 0; i < (int)magicianPowers.size(); i++)
+	{
+		if (magicianPowers[i]>previous)
+		{
 			previous = magicianPowers[i];
-			count++;
+			count += previous;
+			result.push_back(count);
 		}
 	}
 
-	return count;
+	return result;
 }
 
 
@@ -157,6 +164,7 @@ unordered_map<string, node> generateGraph(unordered_map<string, vector<int>> inp
 
 	unordered_map<string, node> output;
 	unordered_map < string, vector<int>>::iterator it, it2;
+	vector<int> incantations;
 
 	for (it = input.begin(); it != input.end(); it++) {
 		//Compare every realm to all other realms to get the connections, and edge weights
@@ -166,7 +174,8 @@ unordered_map<string, node> generateGraph(unordered_map<string, vector<int>> inp
 				//it is working!!!
 				//placing the edges on the node
 				int minChanges = getMinChanges (it->first, it2->first);
-				if (minChanges <= getMaxIncantation (it->second)) {
+				incantations = getMaxIncantation (it->second);
+				if (minChanges <= incantations.size()) {
 					newEdge.initialize (it2->first, minChanges);
 					output[it->first].connections.push_back (newEdge);
 				}
@@ -205,7 +214,7 @@ int shortestPath (unordered_map<string, node>graph, string start, string finish)
 		temp = q.top ();
 		q.pop ();
 
-		for (int i = 0; i < (int)graph[temp.charm].connections.size (); i++) {	
+		for (int i = 0; i < (int)graph[temp.charm].connections.size (); i++) {
 			edge forEdge = graph[temp.charm].connections[i];
 			//if u r mind blown by these next lines u should, this is really weird, checking if the node to add is already visited
 			if (graph[forEdge.charm].visited ==false) {
@@ -214,8 +223,8 @@ int shortestPath (unordered_map<string, node>graph, string start, string finish)
 				//visiting the node
 				graph[forEdge.charm].visited = true;
 				q.push (forEdge);
-			}//if it is visited check if the distance is smaller from this node and update the distance 
-			else { 
+			}//if it is visited check if the distance is smaller from this node and update the distance
+			else {
 				if (forEdge.weight+graph[temp.charm].minWeight<graph[forEdge.charm].minWeight) {
 					graph[forEdge.charm].minWeight = forEdge.weight;
 				}
