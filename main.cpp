@@ -9,7 +9,7 @@ using namespace std;
 
 //Struct for the edge
 struct edge {
-	string charm = NULL;
+	string charm = "";
 	int weight = 0;
 
 	void initialize(string charm, int weight) {
@@ -51,6 +51,9 @@ int main () {
 	unordered_map<string, vector<int>> Realms;
 	unordered_map < string, vector<int>>::iterator it;
 
+	//unordered map which will be the graph
+	unordered_map<string, node> graph;
+
 
 	//Getting input
 	cin >> N;
@@ -69,6 +72,8 @@ int main () {
 		listOfMagi.clear();
 	}
 
+
+	graph=generateGraph(Realms);
 
 	//Check input was collected correctly
 	for (it = Realms.begin(); it != Realms.end(); it++) {
@@ -136,17 +141,24 @@ int getMaxIncantation (vector<int> magicianPowers) {
 //Generates the weighted directed graph
 unordered_map<string, node> generateGraph(unordered_map<string, vector<int>> input) {
 
-	node newNode = node();
 	unordered_map<string, node> output;
 	unordered_map < string, vector<int>>::iterator it, it2;
 
 	for (it = input.begin(); it != input.end(); it++) {
 		//Compare every realm to all other realms to get the connections, and edge weights
-		for (it2 = input.begin(); it2 != input.end() && it != it2; it2++) {
+		for (it2 = input.begin (); it2 != input.end (); it2++) {
+			edge newEdge;
+			if (it != it2) {
+				//it is working!!!
+				//placing the edges on the node
+				int minChanges = getMinChanges (it->first, it2->first);
+				if (minChanges <= getMaxIncantation (it->second)) {
+					newEdge.initialize (it2->first, minChanges);
+					output[it->first].connections.push_back (newEdge);
+				}
 
-			//code goes here to fill newNode
+			}
 		}
-
 		//output.insert(make_pair(it.first, newNode))
 		//newNode.clear();
 	}
