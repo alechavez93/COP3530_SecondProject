@@ -3,8 +3,8 @@
 #include<string>
 #include<vector>
 #include<algorithm>
-
-
+#include <functional>
+#include <queue>
 using namespace std;
 
 //Struct for the edge
@@ -16,6 +16,11 @@ struct edge {
 		this->charm = charm;
 		this->weight = weight;
 	}
+	//operator overload for the priority queue
+	bool operator <(const edge& rhs)const {
+		return weight > rhs.weight;
+	}
+
 };
 
 
@@ -30,6 +35,7 @@ struct node {
 		minWeight = -1;
 		connections.clear();
 	}
+
 };
 
 
@@ -38,7 +44,7 @@ struct node {
 int getMinChanges (string R1, string R2);
 int getMaxIncantation (vector<int> magicianPowers);
 unordered_map<string, node> generateGraph(unordered_map<string, vector<int>> input);
-
+int shortestPath (unordered_map<string, node>graph, string start, string finish);
 
 int main () {
 
@@ -74,6 +80,8 @@ int main () {
 
 
 	graph=generateGraph(Realms);
+
+	shortestPath (graph, "sitting", "kneeding");
 
 	//Check input was collected correctly
 	for (it = Realms.begin(); it != Realms.end(); it++) {
@@ -165,3 +173,32 @@ unordered_map<string, node> generateGraph(unordered_map<string, vector<int>> inp
 
 	return output;
 }
+
+
+//find the least enchantments used, if gems are added to the nodes then it would work with gems as well
+int shortestPath (unordered_map<string, node>graph, string start, string finish) {
+	priority_queue<edge>q;
+
+	for (int i = 0; i < (int)graph[start].connections.size(); i++) {
+		q.push (graph[start].connections[i]);
+	}
+
+	/*testing the priority queue, it works!!!!
+	while(!q.empty()){
+		cout <<"charm-->" <<q.top ().charm << "weight "<<q.top().weight<< endl;
+		q.pop ();
+	}*/
+
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
