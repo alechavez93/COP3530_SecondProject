@@ -147,7 +147,7 @@ unordered_map<string, node> generateGraph(unordered_map<string, vector<int>> inp
 			//code goes here to fill newNode
 		}
 
-		//output.insert(make_pair(it, newNode))
+		//output.insert(make_pair(it.first, newNode))
 		//newNode.clear();
 	}
 
