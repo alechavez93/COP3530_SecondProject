@@ -7,12 +7,10 @@
 
 using namespace std;
 
-
-//Struct for the graph
-struct node {
+//Struct for the edge
+struct edge {
 	string charm = NULL;
 	int weight = 0;
-	bool visited = false;
 
 	void initialize(string charm, int weight) {
 		this->charm = charm;
@@ -20,10 +18,26 @@ struct node {
 	}
 };
 
+
+//Struct for the graph node
+struct node {
+	bool visited = false;
+	int minWeight = -1;
+	vector<edge> connections;
+
+	void clear() {
+		visited = false;
+		minWeight = -1;
+		connections.clear();
+	}
+};
+
+
+
 //Realm => R
 int getMinChanges (string R1, string R2);
 int getMaxIncantation (vector<int> magicianPowers);
-unordered_map<string, vector<node>> generateGraph(unordered_map<string, vector<int>> input);
+unordered_map<string, node> generateGraph(unordered_map<string, vector<int>> input);
 
 
 int main () {
@@ -120,14 +134,22 @@ int getMaxIncantation (vector<int> magicianPowers) {
 
 
 //Generates the weighted directed graph
-unordered_map<string, vector<node>> generateGraph(unordered_map<string, vector<int>> input) {
+unordered_map<string, node> generateGraph(unordered_map<string, vector<int>> input) {
 
-	vector<node> V;	vector<int> temp;
-	unordered_map < string, vector<int>>::iterator it;
+	node newNode = node();
+	unordered_map<string, node> output;
+	unordered_map < string, vector<int>>::iterator it, it2;
 
 	for (it = input.begin(); it != input.end(); it++) {
+		//Compare every realm to all other realms to get the connections, and edge weights
+		for (it2 = input.begin(); it2 != input.end() && it != it2; it2++) {
 
-		/*temp
-		for (int i = 0; i<)*/
+			//code goes here to fill newNode
+		}
+
+		//output.insert(make_pair(it, newNode))
+		//newNode.clear();
 	}
+
+	return output;
 }
