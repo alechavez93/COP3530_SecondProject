@@ -86,7 +86,8 @@ int main () {
 
 	graph=generateGraph(Realms);
 	cout << endl;
-	cout << shortestPath (graph, start, end) << endl;;
+	cout << shortestPath (graph, start, end) << endl;
+	cout << shortestPath (graph, end, start) << endl;
 
 	//Check input was collected correctly
 	for (it = Realms.begin(); it != Realms.end(); it++) {
@@ -184,10 +185,13 @@ unordered_map<string, node> generateGraph(unordered_map<string, vector<int>> inp
 int shortestPath (unordered_map<string, node>graph, string start, string finish) {
 	priority_queue<edge>q;
 
+	graph[start].visited = true;
+
 	for (int i = 0; i < (int)graph[start].connections.size(); i++) {
 		edge forEdge = graph[start].connections[i];
 		graph[forEdge.charm].minWeight = forEdge.weight;
-		q.push (graph[start].connections[i]);
+		graph[forEdge.charm].visited = true;
+		q.push (forEdge);
 	}
 
 	/*testing the priority queue, it works!!!!
