@@ -22,6 +22,7 @@ struct node {
 //Realm => R
 int getMinChanges (string R1, string R2);
 int getMaxIncantation (vector<int> magicianPowers);
+unordered_map<string, vector<node>> generateGraph(unordered_map<string, vector<int>>);
 
 
 int main () {
@@ -68,7 +69,7 @@ int main () {
 	return 0;
 }
 
-//gets the total changes that it needs to perform to get to a certain realm
+//Gets the total changes that it needs to perform to get to a certain realm
 int getMinChanges (string R1, string R2) {
 	vector<vector<int>> ar;
 	int rows = R1.size () + 1;
@@ -103,7 +104,7 @@ int getMinChanges (string R1, string R2) {
 }
 
 
-//gets the total amount of incantation per Realm that can be performed
+//Gets the total amount of incantation per Realm that can be performed
 int getMaxIncantation (vector<int> magicianPowers) {
 	int count = 0; int previous = -1;
 	for (int i = 0; i < (int)magicianPowers.size(); i++) {
@@ -116,3 +117,8 @@ int getMaxIncantation (vector<int> magicianPowers) {
 	return count;
 }
 
+
+//Generates the weighted directed graph
+unordered_map<string, vector<node>> generateGraph(unordered_map<string, vector<int>>) {
+
+}
