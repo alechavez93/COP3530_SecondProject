@@ -50,6 +50,9 @@ int main () {
 
 	//N -> number of realms    M -> number of magi   P -> power of magi
 	int N, M, P;	string charm;
+	//start node where to start, end node where to stop
+	string start, end;
+
 	vector<int> listOfMagi;
 
 
@@ -79,9 +82,11 @@ int main () {
 	}
 
 
+	cin >> start >> end;
+
 	graph=generateGraph(Realms);
 	cout << endl;
-	cout << shortestPath (graph, "sitting", "kneeding") << endl;;
+	cout << shortestPath (graph, start, end) << endl;;
 
 	//Check input was collected correctly
 	for (it = Realms.begin(); it != Realms.end(); it++) {
@@ -196,11 +201,13 @@ int shortestPath (unordered_map<string, node>graph, string start, string finish)
 		temp = q.top ();
 		q.pop ();
 
-		for (int i = 0; i < (int)graph[temp.charm].connections.size (); i++) {
-				//if u r mind blown u should, this is really weird, checking if the node to add is already visited
+		for (int i = 0; i < (int)graph[temp.charm].connections.size (); i++) {	
 			edge forEdge = graph[temp.charm].connections[i];
+			//if u r mind blown by these next lines u should, this is really weird, checking if the node to add is already visited
 			if (graph[forEdge.charm].visited ==false) {
+				//add the weight of the forEdge to the one on the temporary edge
 				graph[forEdge.charm].minWeight = forEdge.weight+graph[temp.charm].minWeight;
+				//visiting the node
 				graph[forEdge.charm].visited = true;
 				q.push (forEdge);
 			}//if it is visited check if the distance is smaller from this node and update the distance 
@@ -216,14 +223,3 @@ int shortestPath (unordered_map<string, node>graph, string start, string finish)
 
 	return graph[finish].minWeight;
 }
-
-
-
-
-
-
-
-
-
-
-
