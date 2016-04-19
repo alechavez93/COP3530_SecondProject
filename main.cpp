@@ -12,6 +12,7 @@ using namespace std;
 struct node {
 	string charm = NULL;
 	int weight = 0;
+	bool visited = false;
 
 	void initialize(string charm, int weight) {
 		this->charm = charm;
@@ -121,6 +122,12 @@ int getMaxIncantation (vector<int> magicianPowers) {
 //Generates the weighted directed graph
 unordered_map<string, vector<node>> generateGraph(unordered_map<string, vector<int>> input) {
 
+	vector<node> V;	vector<int> temp;
 	unordered_map < string, vector<int>>::iterator it;
 
+	for (it = input.begin(); it != input.end(); it++) {
+
+		/*temp
+		for (int i = 0; i<)*/
+	}
 }
