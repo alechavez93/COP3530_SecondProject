@@ -80,8 +80,8 @@ int main () {
 
 
 	graph=generateGraph(Realms);
-
-	shortestPath (graph, "sitting", "kneeding");
+	cout << endl;
+	cout << shortestPath (graph, "sitting", "kneeding") << endl;;
 
 	//Check input was collected correctly
 	for (it = Realms.begin(); it != Realms.end(); it++) {
@@ -180,6 +180,8 @@ int shortestPath (unordered_map<string, node>graph, string start, string finish)
 	priority_queue<edge>q;
 
 	for (int i = 0; i < (int)graph[start].connections.size(); i++) {
+		edge forEdge = graph[start].connections[i];
+		graph[forEdge.charm].minWeight = forEdge.weight;
 		q.push (graph[start].connections[i]);
 	}
 
@@ -189,7 +191,30 @@ int shortestPath (unordered_map<string, node>graph, string start, string finish)
 		q.pop ();
 	}*/
 
-	return 0;
+	while (!q.empty()) {
+		edge temp;
+		temp = q.top ();
+		q.pop ();
+
+		for (int i = 0; i < (int)graph[temp.charm].connections.size (); i++) {
+				//if u r mind blown u should, this is really weird, checking if the node to add is already visited
+			edge forEdge = graph[temp.charm].connections[i];
+			if (graph[forEdge.charm].visited ==false) {
+				graph[forEdge.charm].minWeight = forEdge.weight+graph[temp.charm].minWeight;
+				graph[forEdge.charm].visited = true;
+				q.push (forEdge);
+			}//if it is visited check if the distance is smaller from this node and update the distance 
+			else { 
+				if (forEdge.weight+graph[temp.charm].minWeight<graph[forEdge.charm].minWeight) {
+					graph[forEdge.charm].minWeight = forEdge.weight;
+				}
+			}
+		}
+
+	}
+
+
+	return graph[finish].minWeight;
 }
 
 
