@@ -91,8 +91,7 @@ int main () {
 	cin >> start >> end;
 
 	graph=generateGraph(Realms);
-	cout << endl;
-<<<<<<< HEAD
+
 	result = shortestPath (graph, start, end);
 	if (result[0] == -1)
 	{
@@ -103,15 +102,6 @@ int main () {
 		// output the minimum of incantations and number of gems needed going to destination
 		cout << result[0] << " " << result[1] << endl;
 	}
-=======
-	cout << shortestPath (graph, start, end) << endl;
-	cout << shortestPath (graph, end, start) << endl;
-
-
-	//Check input was collected correctly
-	for (it = Realms.begin(); it != Realms.end(); it++) {
-		cout << "Charm: " << it->first << endl;
->>>>>>> d2525e8f4b408b09968b1e16d783d56c30d48cb2
 
 	// cleaning the vector
 	result.clear();
@@ -125,22 +115,6 @@ int main () {
 		// output the minimum of incantations and number of gems needed coming back from destination
 		cout << result[0] << " " << result[1] << endl;
 	}
-
-<<<<<<< HEAD
-	// //Check input was collected correctly
-	// for (it = Realms.begin(); it != Realms.end(); it++) {
-	// 	cout << "Charm: " << it->first << endl;
-	//
-	// 	for (int i = 0; i < it->second.size(); i++) {
-	// 		cout << it->second[i] << " ";
-	// 	}
-	// 	cout << endl << endl;
-	// }
-
-	system("pause");
-	return 0;
-=======
->>>>>>> d2525e8f4b408b09968b1e16d783d56c30d48cb2
 
 	system("pause");
 	return 0;
