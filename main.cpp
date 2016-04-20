@@ -115,8 +115,7 @@ int main () {
 		// output the minimum of incantations and number of gems needed coming back from destination
 		cout << result[0] << " " << result[1] << endl;
 	}
-
-	system("pause");
+	
 	return 0;
 }
 
