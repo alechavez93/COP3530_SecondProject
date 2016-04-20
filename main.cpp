@@ -11,15 +11,17 @@ using namespace std;
 //Struct for the edge
 struct edge {
 	string charm = "";
-	int weight = 0;
+	int incantations = 0;
+	int gems = 0;
 
-	void initialize(string charm, int weight) {
+	void initialize(string charm, int weight, int gems) {
 		this->charm = charm;
-		this->weight = weight;
+		this->incantations = weight;
+		this->gems = gems;
 	}
 	//operator overload for the priority queue
 	bool operator <(const edge& rhs)const {
-		return weight > rhs.weight;
+		return incantations > rhs.incantations;
 	}
 
 };
@@ -28,16 +30,18 @@ struct edge {
 //Struct for the graph node
 struct node {
 	bool visited = false;
-	int minWeight = -1;
+	int incantationsWeight = -1;
+	int gemWeight = -1;
 	vector<edge> connections;
 
 	void clear() {
 		visited = false;
-		minWeight = -1;
+		incantationsWeight = -1;
 		connections.clear();
 	}
 
 };
+
 
 
 
