@@ -44,8 +44,6 @@ struct node {
 };
 
 
-
-
 //Realm => R
 int getMinChanges (string R1, string R2);
 vector<int> getMaxIncantation (vector<int> magicianPowers);
@@ -94,23 +92,38 @@ int main () {
 	graph=generateGraph(Realms);
 	cout << endl;
 	result = shortestPath (graph, start, end);
-	// output the minimum of incantations and number of gems needed going to destination
-	cout << result[0] << " " << result[1] << endl;
+	if (result[0] == -1)
+	{
+		cout << "IMPOSSIBLE" << endl;
+	}
+	else
+	{
+		// output the minimum of incantations and number of gems needed going to destination
+		cout << result[0] << " " << result[1] << endl;
+	}
+
 	// cleaning the vector
 	result.clear();
 	result = shortestPath (graph, end, start);
-	// output the minimum of incantations and number of gems needed coming back from destination
-	cout << result[0] << " " << result[1] << endl;
-
-	//Check input was collected correctly
-	for (it = Realms.begin(); it != Realms.end(); it++) {
-		cout << "Charm: " << it->first << endl;
-
-		for (int i = 0; i < it->second.size(); i++) {
-			cout << it->second[i] << " ";
-		}
-		cout << endl << endl;
+	if (result[0] == -1)
+	{
+		cout << "IMPOSSIBLE" << endl;
 	}
+	else
+	{
+		// output the minimum of incantations and number of gems needed coming back from destination
+		cout << result[0] << " " << result[1] << endl;
+	}
+
+	// //Check input was collected correctly
+	// for (it = Realms.begin(); it != Realms.end(); it++) {
+	// 	cout << "Charm: " << it->first << endl;
+	//
+	// 	for (int i = 0; i < it->second.size(); i++) {
+	// 		cout << it->second[i] << " ";
+	// 	}
+	// 	cout << endl << endl;
+	// }
 
 	system("pause");
 	return 0;
