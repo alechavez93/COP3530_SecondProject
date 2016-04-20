@@ -10,37 +10,40 @@
 using namespace std;
 
 //Struct for the edge
-struct edge {
+struct edge
+{
 	string charm = "";
 	int incantations = 0;
 	int gems = 0;
 
-	void initialize(string charm, int weight, int gems) {
+	void initialize(string charm, int weight, int gems)
+	{
 		this->charm = charm;
 		this->incantations = weight;
 		this->gems = gems;
 	}
 	//operator overload for the priority queue
-	bool operator <(const edge& rhs)const {
+	bool operator <(const edge& rhs)const
+	{
 		return incantations > rhs.incantations;
 	}
-
 };
 
 
 //Struct for the graph node
-struct node {
+struct node
+{
 	bool visited = false;
 	int incantationsWeight = -1;
 	int gemWeight = -1;
 	vector<edge> connections;
 
-	void clear() {
+	void clear()
+	{
 		visited = false;
 		incantationsWeight = -1;
 		connections.clear();
 	}
-
 };
 
 
@@ -51,8 +54,8 @@ int getIndexOfCeiling(int number, vector<int> magicianPowers, vector<int> T, int
 unordered_map<string, node> generateGraph(unordered_map<string, vector<int>> input);
 vector<int> shortestPath (unordered_map<string, node>graph, string start, string finish);
 
-int main () {
-
+int main ()
+{
 	//N -> number of realms    M -> number of magi   P -> power of magi
 	int N, M, P;	string charm;
 	//start node where to start, end node where to stop
@@ -61,7 +64,6 @@ int main () {
 	vector<int> listOfMagi;
 	vector<int> result;
 
-
 	//unordered map to save the whole input
 	unordered_map<string, vector<int>> Realms;
 	unordered_map < string, vector<int>>::iterator it;
@@ -69,15 +71,16 @@ int main () {
 	//unordered map which will be the graph
 	unordered_map<string, node> graph;
 
-
 	//Getting input
 	cin >> N;
-	for (int i = 0; i < N; i++) {
+	for (int i = 0; i < N; i++)
+	{
 
 		cin >> charm; cin >> M;
 
 		//Filling the vector with the magi's powers
-		for (int j = 0; j < M; j++) {
+		for (int j = 0; j < M; j++)
+		{
 			cin >> P;
 			listOfMagi.push_back(P);
 		}
@@ -115,34 +118,43 @@ int main () {
 		// output the minimum of incantations and number of gems needed coming back from destination
 		cout << result[0] << " " << result[1] << endl;
 	}
-	
+
 	return 0;
 }
 
 //Gets the total changes that it needs to perform to get to a certain realm
-int getMinChanges (string R1, string R2) {
+int getMinChanges (string R1, string R2)
+{
 	vector<vector<int>> ar;
 	int rows = R1.size () + 1;
 	ar.resize (rows);
-	for (int i = 0; i < rows; i++) {
+	for (int i = 0; i < rows; i++)
+	{
 		ar[i].resize (R2.size () + 1);
 	}
 
-	for (int i = 0; i <= R1.size (); i++) {
-		for (int j = 0; j <= R2.size(); j++) {
+	for (int i = 0; i <= R1.size (); i++)
+	 {
+		for (int j = 0; j <= R2.size(); j++)
+		{
 
-			if (i==0) {
+			if (i==0)
+			{
 				ar[i][j] = j;
 			}
-			else {
-				if (j==0) {
+			else
+			{
+				if (j==0)
+				{
 					ar[i][j] = i;
 				}
 				else {
-					if (R1[i-1]==R2[j-1]) {
+					if (R1[i-1]==R2[j-1])
+					{
 						ar[i][j] = ar[i - 1][j - 1];
 					}
-					else {
+					else
+					{
 						ar[i][j] = 1 + min (min (ar[i][j - 1], ar[i - 1][j]), ar[i - 1][j - 1]);
 					}
 				}
@@ -150,7 +162,6 @@ int getMinChanges (string R1, string R2) {
 		}
 	}
 	return ar[R1.size ()][R2.size ()];
-
 }
 
 
@@ -212,9 +223,13 @@ vector<int> getMaxIncantation (vector<int> magicianPowers)
 	for(int i=0;i <= length;i++)
 	{
 		if(i == 0)
+		{
 			results[i] = maxSubsequence[i];
+		}
 		else
-		  results[i] = results[i-1] + maxSubsequence[i];
+		{
+			results[i] = results[i-1] + maxSubsequence[i];
+		}
 	}
 
 	return results;
@@ -242,18 +257,21 @@ int getIndexOfCeiling(int number, vector<int> magicianPowers, vector<int> T, int
 }
 
 //Generates the weighted directed graph
-unordered_map<string, node> generateGraph(unordered_map<string, vector<int>> input) {
+unordered_map<string, node> generateGraph(unordered_map<string, vector<int>> input)
+{
 
 	unordered_map<string, node> output;
 	unordered_map < string, vector<int>>::iterator it, it2;
 	vector<int> incantations;
 
-	for (it = input.begin(); it != input.end(); it++) {
+	for (it = input.begin(); it != input.end(); it++)
+	{
 		//Compare every realm to all other realms to get the connections, and edge weights
-		for (it2 = input.begin (); it2 != input.end (); it2++) {
+		for (it2 = input.begin (); it2 != input.end (); it2++)
+		{
 			edge newEdge;
-			if (it != it2) {
-				//it is working!!!
+			if (it != it2)
+			{
 				//placing the edges on the node
 				int minChanges = getMinChanges (it->first, it2->first);
 				incantations = getMaxIncantation (it->second);
@@ -261,19 +279,16 @@ unordered_map<string, node> generateGraph(unordered_map<string, vector<int>> inp
 					newEdge.initialize (it2->first, minChanges, incantations[minChanges-1]);
 					output[it->first].connections.push_back (newEdge);
 				}
-
 			}
 		}
-		//output.insert(make_pair(it.first, newNode))
-		//newNode.clear();
 	}
 
 	return output;
 }
 
-
 //find the least enchantments used, if gems are added to the nodes then it would work with gems as well
-vector<int> shortestPath (unordered_map<string, node>graph, string start, string finish) {
+vector<int> shortestPath (unordered_map<string, node>graph, string start, string finish)
+{
 
 	vector<int> result;
 
@@ -289,12 +304,14 @@ vector<int> shortestPath (unordered_map<string, node>graph, string start, string
 		q.push (forEdge);
 	}
 
-	while (!q.empty()) {
+	while (!q.empty())
+	{
 		edge temp;
 		temp = q.top ();
 		q.pop ();
 
-		for (int i = 0; i < (int)graph[temp.charm].connections.size (); i++) {
+		for (int i = 0; i < (int)graph[temp.charm].connections.size (); i++)
+		{
 			edge forEdge = graph[temp.charm].connections[i];
 			if (graph[forEdge.charm].visited ==false) {
 				//add the weight of the forEdge to the one on the temporary edge
@@ -303,9 +320,12 @@ vector<int> shortestPath (unordered_map<string, node>graph, string start, string
 				//visiting the node
 				graph[forEdge.charm].visited = true;
 				q.push (forEdge);
-			}//if it is visited check if the distance is smaller from this node and update the distance
-			else {
-				if (forEdge.incantations+graph[temp.charm].incantationsWeight<graph[forEdge.charm].incantationsWeight) {
+			}
+			//if it is visited check if the distance is smaller from this node and update the distance
+			else
+			{
+				if (forEdge.incantations+graph[temp.charm].incantationsWeight<graph[forEdge.charm].incantationsWeight)
+				{
 					graph[forEdge.charm].gemWeight = forEdge.gems;
 					graph[forEdge.charm].incantationsWeight=forEdge.incantations;
 				}
