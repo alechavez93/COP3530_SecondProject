@@ -1,3 +1,4 @@
+
 #include<iostream>
 #include<unordered_map>
 #include<string>
@@ -11,15 +12,17 @@ using namespace std;
 //Struct for the edge
 struct edge {
 	string charm = "";
-	int weight = 0;
+	int incantations = 0;
+	int gems = 0;
 
-	void initialize(string charm, int weight) {
+	void initialize(string charm, int weight, int gems) {
 		this->charm = charm;
-		this->weight = weight;
+		this->incantations = weight;
+		this->gems = gems;
 	}
 	//operator overload for the priority queue
 	bool operator <(const edge& rhs)const {
-		return weight > rhs.weight;
+		return incantations > rhs.incantations;
 	}
 
 };
@@ -28,16 +31,18 @@ struct edge {
 //Struct for the graph node
 struct node {
 	bool visited = false;
-	int minWeight = -1;
+	int incantationsWeight = -1;
+	int gemWeight = -1;
 	vector<edge> connections;
 
 	void clear() {
 		visited = false;
-		minWeight = -1;
+		incantationsWeight = -1;
 		connections.clear();
 	}
 
 };
+
 
 
 
@@ -106,23 +111,23 @@ int main () {
 	system("pause");
 	return 0;
 
+<<<<<<< HEAD
 /*
 	int length = 0, number = 0;
+=======
+	/*
+	int length = 0;
+>>>>>>> master
 	cin >> length;
-
 	vector<int> arr(length);
 	for(int i=0;i<length;i++)
 		cin >> arr[i];
-
 	vector<int> maxSub = getMaxIncantation(arr);
-
 	cout << "The max subarray is: " << endl;
 	for(int i=0;i<maxSub.size();i++)
 		cout << maxSub[i] << " ";
 	cout << " End" << endl;
-
 	system("pause");
-
 	return 0;
 	*/
 }
@@ -232,6 +237,7 @@ vector<int> getMaxIncantation (vector<int> magicianPowers)
 //before I called this method.]
 int getIndexOfCeiling(int number, vector<int> magicianPowers, vector<int> T, int iniIndex, int endIndex)
 {
+<<<<<<< HEAD
 	if(iniIndex == endIndex)
 		return T[iniIndex];
 
@@ -244,6 +250,57 @@ int getIndexOfCeiling(int number, vector<int> magicianPowers, vector<int> T, int
 
 		//magicianPowers[T[middleIndex]] > number
 		return getIndexOfCeiling(number, magicianPowers, T, iniIndex, middleIndex-1);
+=======
+	int length = 0;
+	vector<int> T(magicianPowers.size());
+	vector<int> R(magicianPowers.size());
+	//Initizalize R values to -1
+	for (int i = 0; i < (int)magicianPowers.size(); i++)
+		R[i] = -1;
+	for (int i = 1; i < (int)magicianPowers.size(); i++)
+	{
+		if(magicianPowers[i] > magicianPowers[T[length]])
+		{
+			T[++length] = i;
+			R[i] = T[length-1];
+		}
+		else
+		{
+			if(magicianPowers[i] < magicianPowers[T[0]])
+			{
+				T[0] = i;
+			}
+			else
+			{
+				//Find index of the ceiling of magicianPowers[i] in T[0:length+1] using Binary Search
+				int index_ceiling = getIndexOfCeiling(magicianPowers[i], magicianPowers, T, length+1);
+				T[index_ceiling] = i;
+				R[i] = T[index_ceiling-1];
+			}
+		}
+	}
+	//Get increasing subsequence
+	vector<int> results(length+1);
+	int index = T[length];
+	for(int i=length;i >= 0;i--)
+	{
+		results[i] = magicianPowers[index];
+		index = R[index];
+	}
+	return results;
+}
+*/
+
+int getIndexOfCeiling(int number, vector<int> magicianPowers, vector<int> T, int size)
+{
+	if(magicianPowers.size() == 0 || T.size() == 0)
+		throw invalid_argument("Array cannot be empty.");
+
+	for(int i=0;i<size;i++)
+	{
+		if(magicianPowers[T[i]] > number)
+			return i;
+>>>>>>> master
 	}
 
 	return -1;
@@ -266,7 +323,7 @@ unordered_map<string, node> generateGraph(unordered_map<string, vector<int>> inp
 				int minChanges = getMinChanges (it->first, it2->first);
 				incantations = getMaxIncantation (it->second);
 				if (minChanges <= incantations.size()) {
-					newEdge.initialize (it2->first, minChanges);
+					newEdge.initialize (it2->first, minChanges, incantations[minChanges-1]);
 					output[it->first].connections.push_back (newEdge);
 				}
 
@@ -288,7 +345,7 @@ int shortestPath (unordered_map<string, node>graph, string start, string finish)
 
 	for (int i = 0; i < (int)graph[start].connections.size(); i++) {
 		edge forEdge = graph[start].connections[i];
-		graph[forEdge.charm].minWeight = forEdge.weight;
+		graph[forEdge.charm].gemWeight = forEdge.gems;
 		graph[forEdge.charm].visited = true;
 		q.push (forEdge);
 	}
@@ -309,14 +366,14 @@ int shortestPath (unordered_map<string, node>graph, string start, string finish)
 			//if u r mind blown by these next lines u should, this is really weird, checking if the node to add is already visited
 			if (graph[forEdge.charm].visited ==false) {
 				//add the weight of the forEdge to the one on the temporary edge
-				graph[forEdge.charm].minWeight = forEdge.weight+graph[temp.charm].minWeight;
+				graph[forEdge.charm].gemWeight = forEdge.gems+graph[temp.charm].gemWeight;
 				//visiting the node
 				graph[forEdge.charm].visited = true;
 				q.push (forEdge);
 			}//if it is visited check if the distance is smaller from this node and update the distance
 			else {
-				if (forEdge.weight+graph[temp.charm].minWeight<graph[forEdge.charm].minWeight) {
-					graph[forEdge.charm].minWeight = forEdge.weight;
+				if (forEdge.gems+graph[temp.charm].gemWeight<graph[forEdge.charm].gemWeight) {
+					graph[forEdge.charm].gemWeight = forEdge.gems;
 				}
 			}
 		}
@@ -324,5 +381,5 @@ int shortestPath (unordered_map<string, node>graph, string start, string finish)
 	}
 
 
-	return graph[finish].minWeight;
+	return graph[finish].gemWeight;
 }
