@@ -51,7 +51,7 @@ int getMinChanges (string R1, string R2);
 vector<int> getMaxIncantation (vector<int> magicianPowers);
 int getIndexOfCeiling(int number, vector<int> magicianPowers, vector<int> T, int size);
 unordered_map<string, node> generateGraph(unordered_map<string, vector<int>> input);
-int shortestPath (unordered_map<string, node>graph, string start, string finish);
+vector<int> shortestPath (unordered_map<string, node>graph, string start, string finish);
 
 int main () {
 	//N -> number of realms    M -> number of magi   P -> power of magi
@@ -60,6 +60,7 @@ int main () {
 	string start, end;
 
 	vector<int> listOfMagi;
+	vector<int> result;
 
 
 	//unordered map to save the whole input
@@ -92,8 +93,14 @@ int main () {
 
 	graph=generateGraph(Realms);
 	cout << endl;
-	cout << shortestPath (graph, start, end) << endl;
-	cout << shortestPath (graph, end, start) << endl;
+	result = shortestPath (graph, start, end);
+	// output the minimum of incantations and number of gems needed going to destination
+	cout << result[0] << " " << result[1] << endl;
+	// cleaning the vector
+	result.clear();
+	result = shortestPath (graph, end, start);
+	// output the minimum of incantations and number of gems needed coming back from destination
+	cout << result[0] << " " << result[1] << endl;
 
 	//Check input was collected correctly
 	for (it = Realms.begin(); it != Realms.end(); it++) {
@@ -313,23 +320,21 @@ unordered_map<string, node> generateGraph(unordered_map<string, vector<int>> inp
 
 
 //find the least enchantments used, if gems are added to the nodes then it would work with gems as well
-int shortestPath (unordered_map<string, node>graph, string start, string finish) {
+vector<int> shortestPath (unordered_map<string, node>graph, string start, string finish) {
+
+	vector<int> result;
+
 	priority_queue<edge>q;
 
 	graph[start].visited = true;
 
 	for (int i = 0; i < (int)graph[start].connections.size(); i++) {
 		edge forEdge = graph[start].connections[i];
+		graph[forEdge.charm].incantationsWeight=forEdge.incantations;
 		graph[forEdge.charm].gemWeight = forEdge.gems;
 		graph[forEdge.charm].visited = true;
 		q.push (forEdge);
 	}
-
-	/*testing the priority queue, it works!!!!
-	while(!q.empty()){
-		cout <<"charm-->" <<q.top ().charm << "weight "<<q.top().weight<< endl;
-		q.pop ();
-	}*/
 
 	while (!q.empty()) {
 		edge temp;
@@ -338,23 +343,26 @@ int shortestPath (unordered_map<string, node>graph, string start, string finish)
 
 		for (int i = 0; i < (int)graph[temp.charm].connections.size (); i++) {
 			edge forEdge = graph[temp.charm].connections[i];
-			//if u r mind blown by these next lines u should, this is really weird, checking if the node to add is already visited
 			if (graph[forEdge.charm].visited ==false) {
 				//add the weight of the forEdge to the one on the temporary edge
 				graph[forEdge.charm].gemWeight = forEdge.gems+graph[temp.charm].gemWeight;
+				graph[forEdge.charm].incantationsWeight=forEdge.incantations+graph[temp.charm].incantationsWeight;
 				//visiting the node
 				graph[forEdge.charm].visited = true;
 				q.push (forEdge);
 			}//if it is visited check if the distance is smaller from this node and update the distance
 			else {
-				if (forEdge.gems+graph[temp.charm].gemWeight<graph[forEdge.charm].gemWeight) {
+				if (forEdge.incantations+graph[temp.charm].incantationsWeight<graph[forEdge.charm].incantationsWeight) {
 					graph[forEdge.charm].gemWeight = forEdge.gems;
+					graph[forEdge.charm].incantationsWeight=forEdge.incantations;
 				}
 			}
 		}
 
 	}
 
+	result.push_back(graph[finish].incantationsWeight);
+	result.push_back(graph[finish].gemWeight);
 
-	return graph[finish].gemWeight;
+	return result;
 }
