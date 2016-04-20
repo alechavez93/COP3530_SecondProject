@@ -5,6 +5,7 @@
 #include<algorithm>
 #include <functional>
 #include <queue>
+#include <stdexcept>
 using namespace std;
 
 //Struct for the edge
@@ -43,11 +44,11 @@ struct node {
 //Realm => R
 int getMinChanges (string R1, string R2);
 vector<int> getMaxIncantation (vector<int> magicianPowers);
+int getIndexOfCeiling(int number, vector<int> magicianPowers, vector<int> T, int size);
 unordered_map<string, node> generateGraph(unordered_map<string, vector<int>> input);
 int shortestPath (unordered_map<string, node>graph, string start, string finish);
 
 int main () {
-
 	//N -> number of realms    M -> number of magi   P -> power of magi
 	int N, M, P;	string charm;
 	//start node where to start, end node where to stop
@@ -101,6 +102,27 @@ int main () {
 
 	system("pause");
 	return 0;
+
+	/*
+
+	int length = 0;
+	cin >> length;
+
+	vector<int> arr(length);
+	for(int i=0;i<length;i++)
+		cin >> arr[i];
+
+	vector<int> maxSub = getMaxIncantation(arr);
+
+	cout << "The max subarray is: " << endl;
+	for(int i=0;i<maxSub.size();i++)
+		cout << maxSub[i] << " ";
+	cout << " End" << endl;
+
+	system("pause");
+
+	return 0;
+	*/
 }
 
 //Gets the total changes that it needs to perform to get to a certain realm
@@ -142,22 +164,128 @@ int getMinChanges (string R1, string R2) {
 //Each element in the result vector shows the power's cost up to position i
 vector<int> getMaxIncantation (vector<int> magicianPowers)
 {
-	vector<int> result;
-	int count = 0, previous = -1;
+	int length = 0;
+	vector<int> T(magicianPowers.size());
+	vector<int> R(magicianPowers.size());
 
+	//Initizalize R values to -1
 	for (int i = 0; i < (int)magicianPowers.size(); i++)
+		R[i] = -1;
+
+	for (int i = 1; i < (int)magicianPowers.size(); i++)
 	{
-		if (magicianPowers[i]>previous)
+		if(magicianPowers[i] > magicianPowers[T[length]])
 		{
-			previous = magicianPowers[i];
-			count += previous;
-			result.push_back(count);
+			T[++length] = i;
+			R[i] = T[length-1];
+		}
+		else
+		{
+			if(magicianPowers[i] < magicianPowers[T[0]])
+			{
+				T[0] = i;
+			}
+			else
+			{
+				int index_ceiling = getIndexOfCeiling(magicianPowers[i]-1, magicianPowers, T, length+1);
+				if(magicianPowers[i] != magicianPowers[T[index_ceiling]])
+				{
+					//Find index of the ceiling of magicianPowers[i] in T[0:length+1] using Binary Search
+					index_ceiling = getIndexOfCeiling(magicianPowers[i], magicianPowers, T, length+1);
+					T[index_ceiling] = i;
+					R[i] = T[index_ceiling-1];
+				}
+			}
 		}
 	}
 
-	return result;
+	//Get increasing subsequence
+	vector<int> maxSubsequence(length+1);
+	int index = T[length];
+
+	for(int i=length;i >= 0;i--)
+	{
+		maxSubsequence[i] = magicianPowers[index];
+		index = R[index];
+	}
+
+	//Get vector with gems count per index
+	vector<int> results(length+1);
+
+	for(int i=0;i <= length;i++)
+	{
+		if(i == 0)
+			results[i] = maxSubsequence[i];
+		else
+		  results[i] = results[i-1] + maxSubsequence[i];
+	}
+
+	return results;
 }
 
+/*
+//Works for non-repeated values
+//https://www.youtube.com/watch?v=S9oUiVYEq7E
+vector<int> getMaxIncantation (vector<int> magicianPowers)
+{
+	int length = 0;
+	vector<int> T(magicianPowers.size());
+	vector<int> R(magicianPowers.size());
+
+	//Initizalize R values to -1
+	for (int i = 0; i < (int)magicianPowers.size(); i++)
+		R[i] = -1;
+
+	for (int i = 1; i < (int)magicianPowers.size(); i++)
+	{
+		if(magicianPowers[i] > magicianPowers[T[length]])
+		{
+			T[++length] = i;
+			R[i] = T[length-1];
+		}
+		else
+		{
+			if(magicianPowers[i] < magicianPowers[T[0]])
+			{
+				T[0] = i;
+			}
+			else
+			{
+				//Find index of the ceiling of magicianPowers[i] in T[0:length+1] using Binary Search
+				int index_ceiling = getIndexOfCeiling(magicianPowers[i], magicianPowers, T, length+1);
+				T[index_ceiling] = i;
+				R[i] = T[index_ceiling-1];
+			}
+		}
+	}
+
+	//Get increasing subsequence
+	vector<int> results(length+1);
+	int index = T[length];
+
+	for(int i=length;i >= 0;i--)
+	{
+		results[i] = magicianPowers[index];
+		index = R[index];
+	}
+
+	return results;
+}
+*/
+
+int getIndexOfCeiling(int number, vector<int> magicianPowers, vector<int> T, int size)
+{
+	if(magicianPowers.size() == 0 || T.size() == 0)
+		throw invalid_argument("Array cannot be empty.");
+
+	for(int i=0;i<size;i++)
+	{
+		if(magicianPowers[T[i]] > number)
+			return i;
+	}
+
+	return -1;
+}
 
 //Generates the weighted directed graph
 unordered_map<string, node> generateGraph(unordered_map<string, vector<int>> input) {
