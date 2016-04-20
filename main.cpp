@@ -44,11 +44,12 @@ struct node {
 //Realm => R
 int getMinChanges (string R1, string R2);
 vector<int> getMaxIncantation (vector<int> magicianPowers);
-int getIndexOfCeiling(int number, vector<int> magicianPowers, vector<int> T, int size);
+int getIndexOfCeiling(int number, vector<int> magicianPowers, vector<int> T, int iniIndex, int endIndex);
 unordered_map<string, node> generateGraph(unordered_map<string, vector<int>> input);
 int shortestPath (unordered_map<string, node>graph, string start, string finish);
 
 int main () {
+
 	//N -> number of realms    M -> number of magi   P -> power of magi
 	int N, M, P;	string charm;
 	//start node where to start, end node where to stop
@@ -90,6 +91,7 @@ int main () {
 	cout << shortestPath (graph, start, end) << endl;
 	cout << shortestPath (graph, end, start) << endl;
 
+
 	//Check input was collected correctly
 	for (it = Realms.begin(); it != Realms.end(); it++) {
 		cout << "Charm: " << it->first << endl;
@@ -100,12 +102,12 @@ int main () {
 		cout << endl << endl;
 	}
 
+
 	system("pause");
 	return 0;
 
-	/*
-
-	int length = 0;
+/*
+	int length = 0, number = 0;
 	cin >> length;
 
 	vector<int> arr(length);
@@ -187,11 +189,14 @@ vector<int> getMaxIncantation (vector<int> magicianPowers)
 			}
 			else
 			{
-				int index_ceiling = getIndexOfCeiling(magicianPowers[i]-1, magicianPowers, T, length+1);
-				if(magicianPowers[i] != magicianPowers[T[index_ceiling]])
+				int index_ceiling = getIndexOfCeiling(magicianPowers[i]-1, magicianPowers, T, 0, length);
+
+				//If element was not found (a.k.a. is not repeated) then we look up the ceiling
+				if(magicianPowers[i] > magicianPowers[T[index_ceiling]])
 				{
 					//Find index of the ceiling of magicianPowers[i] in T[0:length+1] using Binary Search
-					index_ceiling = getIndexOfCeiling(magicianPowers[i], magicianPowers, T, length+1);
+					//index_ceiling = getIndexOfCeiling(magicianPowers[i], magicianPowers, T, length+1);
+					index_ceiling = getIndexOfCeiling(magicianPowers[i], magicianPowers, T, 0, length);
 					T[index_ceiling] = i;
 					R[i] = T[index_ceiling-1];
 				}
@@ -223,65 +228,22 @@ vector<int> getMaxIncantation (vector<int> magicianPowers)
 	return results;
 }
 
-/*
-//Works for non-repeated values
-//https://www.youtube.com/watch?v=S9oUiVYEq7E
-vector<int> getMaxIncantation (vector<int> magicianPowers)
+//Number is not contained within the array of magicianPowers[T[i] because I already checked for this condition
+//before I called this method.]
+int getIndexOfCeiling(int number, vector<int> magicianPowers, vector<int> T, int iniIndex, int endIndex)
 {
-	int length = 0;
-	vector<int> T(magicianPowers.size());
-	vector<int> R(magicianPowers.size());
+	if(iniIndex == endIndex)
+		return T[iniIndex];
 
-	//Initizalize R values to -1
-	for (int i = 0; i < (int)magicianPowers.size(); i++)
-		R[i] = -1;
-
-	for (int i = 1; i < (int)magicianPowers.size(); i++)
+	if(iniIndex < endIndex)
 	{
-		if(magicianPowers[i] > magicianPowers[T[length]])
-		{
-			T[++length] = i;
-			R[i] = T[length-1];
-		}
-		else
-		{
-			if(magicianPowers[i] < magicianPowers[T[0]])
-			{
-				T[0] = i;
-			}
-			else
-			{
-				//Find index of the ceiling of magicianPowers[i] in T[0:length+1] using Binary Search
-				int index_ceiling = getIndexOfCeiling(magicianPowers[i], magicianPowers, T, length+1);
-				T[index_ceiling] = i;
-				R[i] = T[index_ceiling-1];
-			}
-		}
-	}
+		int middleIndex = (iniIndex + endIndex)/2;
 
-	//Get increasing subsequence
-	vector<int> results(length+1);
-	int index = T[length];
+		if(magicianPowers[T[middleIndex]] < number)
+			return getIndexOfCeiling(number, magicianPowers, T, middleIndex+1, endIndex);
 
-	for(int i=length;i >= 0;i--)
-	{
-		results[i] = magicianPowers[index];
-		index = R[index];
-	}
-
-	return results;
-}
-*/
-
-int getIndexOfCeiling(int number, vector<int> magicianPowers, vector<int> T, int size)
-{
-	if(magicianPowers.size() == 0 || T.size() == 0)
-		throw invalid_argument("Array cannot be empty.");
-
-	for(int i=0;i<size;i++)
-	{
-		if(magicianPowers[T[i]] > number)
-			return i;
+		//magicianPowers[T[middleIndex]] > number
+		return getIndexOfCeiling(number, magicianPowers, T, iniIndex, middleIndex-1);
 	}
 
 	return -1;
