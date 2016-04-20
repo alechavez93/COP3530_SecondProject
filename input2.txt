@@ -12,4 +12,8 @@ teamer
 3
 4 5 6
 teamer
+<<<<<<< HEAD
 florida
+=======
+florida
+>>>>>>> d2525e8f4b408b09968b1e16d783d56c30d48cb2
